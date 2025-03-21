@@ -1,202 +1,107 @@
-// import React, { useEffect, useState } from 'react';
+// import React, { useEffect, useState, useRef } from 'react';
 // import { motion } from 'framer-motion';
 
 // function Footer() {
 //   const currentYear = new Date().getFullYear();
-//   const [direction, setDirection] = useState('right');
+
+//   const containerRef = useRef(null);
+//   const [fieldWidth, setFieldWidth] = useState(0);
+
+//   useEffect(() => {
+//     function measureWidth() {
+//       if (containerRef.current) {
+//         setFieldWidth(containerRef.current.offsetWidth);
+//       }
+//     }
+//     measureWidth();
+//     window.addEventListener('resize', measureWidth);
+//     return () => window.removeEventListener('resize', measureWidth);
+//   }, []);
+
+//   const playerWidth = 100;
+//   const ballSize = 30;
+//   const ballSpeed = 3;
+//   const kickDuration = 0.5;
+
+//   const rightShift = 80; // Added right shift
+
+//   const leftPlayerX = 0;  
+//   const rightPlayerX = fieldWidth - playerWidth + rightShift;
+
+//   const [ballPosition, setBallPosition] = useState(leftPlayerX + playerWidth);
+//   const [direction, setDirection] = useState<'left' | 'right'>('right');
 //   const [isLeftKicking, setIsLeftKicking] = useState(false);
 //   const [isRightKicking, setIsRightKicking] = useState(false);
-  
-//   // Field dimensions
-//   const fieldWidth = window.innerWidth || 1200; // Use full width of container
-//   const playerWidth = 80;
-//   const ballSize = 30;
-  
-//   // Player positions - left player stays fixed, right player at the edge
-//   const leftPlayerX = 50;
-//   const rightPlayerX = fieldWidth - 120; // Adjusted based on right player position
-  
-//   // Initial ball position (near left player's foot)
-//   const [ballPosition, setBallPosition] = useState(leftPlayerX + playerWidth);
-  
-//   // Animation settings
-//   const ballSpeed = 3; // pixels per frame
-//   const kickDuration = 0.5; // seconds
-  
+
 //   useEffect(() => {
 //     const animateGame = () => {
 //       if (direction === 'right') {
-//         // Moving right
 //         if (ballPosition >= rightPlayerX - ballSize) {
-//           // Ball reached right player
 //           setIsRightKicking(true);
 //           setTimeout(() => {
 //             setIsRightKicking(false);
 //             setDirection('left');
 //           }, kickDuration * 1000);
 //         } else {
-//           // Continue moving right
 //           setBallPosition(prev => prev + ballSpeed);
 //         }
 //       } else {
-//         // Moving left
-//         if (ballPosition <= leftPlayerX + playerWidth) {
-//           // Ball reached left player
+//         if (ballPosition <= leftPlayerX + 2*playerWidth) {
 //           setIsLeftKicking(true);
 //           setTimeout(() => {
 //             setIsLeftKicking(false);
 //             setDirection('right');
 //           }, kickDuration * 1000);
 //         } else {
-//           // Continue moving left
 //           setBallPosition(prev => prev - ballSpeed);
 //         }
 //       }
 //     };
 
-//     // Recalculate field width on window resize
-//     const handleResize = () => {
-//       const newWidth = window.innerWidth;
-//       // Only update if significant change to prevent unnecessary rerenders
-//       if (Math.abs(newWidth - fieldWidth) > 50) {
-//         // If we wanted to update fieldWidth we would need to make it state
-//         // This is handled by the full-width container
-//       }
-//     };
+//     const interval = setInterval(animateGame, 16);
+//     return () => clearInterval(interval);
+//   }, [direction, ballPosition, leftPlayerX, rightPlayerX]);
 
-//     window.addEventListener('resize', handleResize);
-//     const interval = setInterval(animateGame, 16); // ~60fps
-    
-//     return () => {
-//       clearInterval(interval);
-//       window.removeEventListener('resize', handleResize);
-//     };
-//   }, [direction, ballPosition, fieldWidth]);
-
-//   // Kick animation variants for left and right players
-//   const leftKickVariants = {
-//     idle: { rotate: 0 },
-//     kicking: { rotate: 10, transition: { duration: 0.3 } }
-//   };
-  
-//   const rightKickVariants = {
-//     idle: { rotate: 0 },
-//     kicking: { rotate: -10, transition: { duration: 0.3 } }
-//   };
-
-//   // Ball animation variants
 //   const ballVariants = {
-//     moving: { y: [0, -15, 0], transition: { repeat: Infinity, duration: 0.8 } }
-//   };
-// // 𝕏 📷 💼 💬
-//   const socialLinks = [
-//     { 
-//       name: "Twitter", 
-//       icon: <img src="svgs/twitter.png" alt="Twitter" className="w-5 h-5" />, 
-//       url: "#" 
+//     moving: {
+//       y: [0, -20, 0],
+//       transition: { repeat: Infinity, duration: 0.8 },
 //     },
-//     { name: "Instagram", icon: <img src="svgs/instagram.png" alt="Instagram" className="w-5 h-5" />, url: "#" },
-//     { name: "LinkedIn", icon: <img src="svgs/linkedin.png" alt="LinkedIn" className="w-5 h-5" />, url: "#" },
-//     { name: "Discord", icon: <img src="svgs/discord.png" alt="Discord" className="w-6 h-6" />, url: "#" },
-//   ];
-
-//   const footerLinks = [
-//     { name: "About", url: "#" },
-//     { name: "Contact", url: "#" },
-//     { name: "Privacy Policy", url: "#" },
-//     { name: "Terms of Service", url: "#" },
-//     { name: "Code of Conduct", url: "#" },
-//   ];
+//   };
 
 //   return (
-//     <footer className="relative bg-[#0e041c] py-16 px-4 border-t border-violet-900/30">
-//       {/* Football Game Animation */}
-//       <div className="absolute inset-0 pointer-events-none z-10">
-//         <div className="relative w-full h-64 overflow-hidden">
-//           {/* Left player */}
-//           <motion.div 
-//             className="absolute bottom-1"
-//             style={{ left: leftPlayerX }}
-//             animate={isLeftKicking ? 'kicking' : 'idle'}
-//             variants={leftKickVariants}
-//           >
-//             <img 
-//               src="svgs/playerLeft.png" 
-//               alt="Left Player" 
-//               className="w-48 h-64 mt-[20px]"
-//             />
-//           </motion.div>
-          
-//           {/* Right player */}
-//           <motion.div 
-//             className="absolute bottom-4 right-12"
-//             animate={isRightKicking ? 'kicking' : 'idle'}
-//             variants={rightKickVariants}
-//           >
-//             <img 
-//               src="svgs/playerRight.png" 
-//               alt="Right Player" 
-//               className="w-64 h-64"
-//             />
-//           </motion.div>
-          
-//           {/* Football */}
-//           <motion.div 
-//             className="absolute bottom-8"
-//             style={{ left: ballPosition }}
-//             animate="moving"
-//             variants={ballVariants}
-//           >
-//             <img 
-//               src="svgs/football.png" 
-//               alt="Football" 
-//               className="h-12 w-auto"
-//             />
-//           </motion.div>
-          
-//           {/* Kick effect */}
-//           {(isLeftKicking || isRightKicking) && (
-//             <motion.div 
-//               className="absolute bottom-10 bg-white rounded-full opacity-70"
-//               style={{ 
-//                 left: isRightKicking ? rightPlayerX - 40 : leftPlayerX + playerWidth,
-//                 width: 20,
-//                 height: 20
-//               }}
-//               initial={{ scale: 0 }}
-//               animate={{ scale: 3, opacity: 0 }}
-//               transition={{ duration: 0.5 }}
-//             />
-//           )}
-//         </div>
-//       </div>
+//     <footer className="relative bg-[#0e041c] py-10 border-t border-violet-900/30">
+//       <div className="max-w-7xl mx-auto flex items-center justify-between" ref={containerRef}>
+        
+//         {/* Left Player */}
+//         <motion.div
+//           className="relative bottom-0"
+//           animate={isLeftKicking ? { rotate: 10 } : { rotate: 0 }}
+//           transition={{ duration: 0.3 }}
+//         >
+//           <img src="svgs/playerLeft.png" alt="Left Player" className="w-48 h-60 mt-[40px] mr-[20px]" />
+//         </motion.div>
 
-//       {/* Footer Content */}
-//       <div className="max-w-7xl mx-auto relative z-20">
-//         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+//         {/* Footer Content - Centered */}
+//         <div className="text-center px-8 max-w-3xl">
 //           <motion.div
 //             initial={{ opacity: 0, y: 20 }}
 //             whileInView={{ opacity: 1, y: 0 }}
 //             transition={{ duration: 0.8 }}
 //             viewport={{ once: true }}
-//             className="mb-8 md:mb-0"
 //           >
-//             <img
-//               src="https://cdn.brandfetch.io/idD1YVU3LM/w/820/h/820/theme/dark/logo.png?c=1dxbfHSJFAPEGdCLU4o5B"
-//               alt="Bolt Logo"
-//               className="h-12 mb-4"
-//             />
-//             <p className="text-white/70 max-w-md text-sm">
-//               Platform for exciting hackathons, showcase innovative ideas, and
-//               collaborate with a global community.
+//             <img src="https://cdn.brandfetch.io/idD1YVU3LM/w/820/h/820/theme/dark/logo.png?c=1dxbfHSJFAPEGdCLU4o5B" alt="Bolt Logo" className="h-12 mx-auto mb-4" />
+//             <p className="text-white/70 text-sm max-w-md mx-auto">
+//               Platform for exciting hackathons, showcase innovative ideas, and collaborate with a global community.
 //             </p>
 //           </motion.div>
 
-//           <div className="flex flex-wrap justify-center gap-6">
-//             {socialLinks.map((link, index) => (
+//           {/* Social Links */}
+//           <div className="flex justify-center gap-6 mt-6">
+//             {['twitter', 'instagram', 'linkedin', 'discord'].map((platform, index) => (
 //               <motion.a
-//                 key={link.name}
-//                 href={link.url}
+//                 key={platform}
+//                 href="#"
 //                 initial={{ opacity: 0, y: 20 }}
 //                 whileInView={{ opacity: 1, y: 0 }}
 //                 whileHover={{ y: -5 }}
@@ -204,22 +109,17 @@
 //                 viewport={{ once: true }}
 //                 className="w-10 h-10 flex items-center justify-center bg-violet-900/30 text-white rounded-full hover:bg-violet-800/50 transition-colors"
 //               >
-//                 {link.icon}
+//                 <img src={`svgs/${platform}.png`} alt={platform} className="w-5 h-5" />
 //               </motion.a>
 //             ))}
 //           </div>
-//         </div>
 
-//         <div className="mt-[50px] pt-8 flex flex-col md:flex-row justify-between items-center">
-//           <p className="text-white/60 text-sm mb-4 md:mb-0">
-//             © {currentYear} Hackathon.dev
-//           </p>
-
-//           <div className="flex flex-wrap justify-center gap-6">
-//             {footerLinks.map((link, index) => (
+//           {/* Footer Links */}
+//           <div className="flex flex-wrap justify-center gap-6 mt-6">
+//             {['About', 'Contact', 'Privacy Policy', 'Terms of Service', 'Code of Conduct'].map((link, index) => (
 //               <motion.a
-//                 key={link.name}
-//                 href={link.url}
+//                 key={link}
+//                 href="#"
 //                 initial={{ opacity: 0 }}
 //                 whileInView={{ opacity: 1 }}
 //                 whileHover={{ scale: 1.05 }}
@@ -227,193 +127,175 @@
 //                 viewport={{ once: true }}
 //                 className="text-white/70 text-sm hover:text-white transition-colors"
 //               >
-//                 {link.name}
+//                 {link}
 //               </motion.a>
 //             ))}
 //           </div>
+
+//           <p className="text-white/60 text-sm mt-6">
+//             © {currentYear} Hackathon.dev
+//           </p>
 //         </div>
+
+//         {/* Right Player */}
+//         <motion.div
+//           className="relative bottom-0"
+//           animate={isRightKicking ? { rotate: -10 } : { rotate: 0 }}
+//           transition={{ duration: 0.3 }}
+//         >
+//           <img src="svgs/playerRight.png" alt="Right Player" className="w-60 h-60 mt-[40px] mr-[20px]" />
+//         </motion.div>
+
 //       </div>
+
+//       {/* Football Animation */}
+//       <motion.div
+//         className="absolute bottom-10 mr-[30px]"
+//         style={{ left: ballPosition }}
+//         animate="moving"
+//         variants={ballVariants}
+//       >
+//         <img src="svgs/football.png" alt="Football" className="h-10 w-auto" />
+//       </motion.div>
 //     </footer>
 //   );
 // }
 
 // export default Footer;
-
-
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { useWindowDimensions } from './useWindowDimensions';
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, useMotionValue, animate } from 'framer-motion';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
-  const [direction, setDirection] = useState('right');
+  const containerRef = useRef(null);
+  const [fieldWidth, setFieldWidth] = useState(0);
+
+  // Measure container width for positioning calculations
+  useEffect(() => {
+    function measureWidth() {
+      if (containerRef.current) {
+        setFieldWidth(containerRef.current.offsetWidth);
+      }
+    }
+    measureWidth();
+    window.addEventListener('resize', measureWidth);
+    return () => window.removeEventListener('resize', measureWidth);
+  }, []);
+
+  // Constants for sizes and positions
+  const playerWidth = 100;
+  const ballSize = 30;
+  const rightShift = 80; // Additional right shift for extreme ball position
+
+  // Left player is at the very left (0px)
+  const leftPlayerX = 0;
+  // Right player position: container width minus player width plus the right shift
+  const rightPlayerX = fieldWidth - playerWidth + rightShift;
+
+  // Adjust startX so the ball doesn't surpass the left player (adjust as needed)
+  // Here we want the ball to trigger left kick when it's around left player's edge.
+  const startX = leftPlayerX + playerWidth + 60; 
+  // End position for the ball's horizontal movement
+  const endX = fieldWidth ? (fieldWidth - playerWidth + rightShift - ballSize) : startX;
+
+  // Animation durations (horizontal movement slowed to roughly 0.6× speed)
+  const horizontalDuration = 10; 
+  const verticalDuration = 0.8; 
+
+  // Create a motion value for the ball’s horizontal position and initialize it at startX
+  const ballX = useMotionValue(startX);
+  
+  // Start horizontal animation when fieldWidth is known
+  useEffect(() => {
+    if (fieldWidth) {
+      const controls = animate(ballX, [startX, endX, startX], {
+        duration: horizontalDuration,
+        ease: "linear",
+        repeat: Infinity
+      });
+      return controls.stop;
+    }
+  }, [fieldWidth, ballX, startX, endX, horizontalDuration]);
+
+  // Ball vertical bounce variant (always smooth)
+  const ballVariants = {
+    bounce: {
+      y: [0, -20, 0],
+      transition: { duration: verticalDuration, ease: "easeInOut", repeat: Infinity }
+    }
+  };
+
+  // Kicking animations for players
   const [isLeftKicking, setIsLeftKicking] = useState(false);
   const [isRightKicking, setIsRightKicking] = useState(false);
-  
-  const { width } = useWindowDimensions();
-  
-  // Field dimensions computed based on current window width
-  const fieldWidth = width;
-  const playerWidth = 80;
-  const ballSize = 30;
-  
-  // Update players' horizontal positions: left player 100px from left, right player 100px from right edge
-  const leftPlayerX = 100;
-  const rightPlayerX = fieldWidth - 100 - playerWidth;
-  
-  // Initial ball position starts near left player's foot
-  const [ballPosition, setBallPosition] = useState(leftPlayerX + playerWidth);
-  
-  const ballSpeed = 3;
-  const kickDuration = 0.5;
-  
+
+  // Define a threshold of 5px for triggering kick
+  const kickRange = 5;
+  const [leftKickCooldown, setLeftKickCooldown] = useState(false);
+  const [rightKickCooldown, setRightKickCooldown] = useState(false);
+
+  // Monitor ballX changes to trigger player kicks when the ball is within ±5px of the extremes
   useEffect(() => {
-    const animateGame = () => {
-      if (direction === 'right') {
-        if (ballPosition >= rightPlayerX - ballSize) {
-          setIsRightKicking(true);
-          setTimeout(() => {
-            setIsRightKicking(false);
-            setDirection('left');
-          }, kickDuration * 1000);
-        } else {
-          setBallPosition(prev => prev + ballSpeed);
-        }
-      } else {
-        if (ballPosition <= leftPlayerX + playerWidth) {
-          setIsLeftKicking(true);
-          setTimeout(() => {
-            setIsLeftKicking(false);
-            setDirection('right');
-          }, kickDuration * 1000);
-        } else {
-          setBallPosition(prev => prev - ballSpeed);
-        }
+    const unsubscribe = ballX.onChange((latest) => {
+      // Check left side: if the ball is within ±kickRange of startX
+      if (Math.abs(latest - startX) < kickRange && !leftKickCooldown) {
+        setIsLeftKicking(true);
+        setLeftKickCooldown(true);
+        setTimeout(() => {
+          setIsLeftKicking(false);
+          setLeftKickCooldown(false);
+        }, 500); // 0.5 second kick duration
       }
-    };
-    
-    const interval = setInterval(animateGame, 16);
-    return () => clearInterval(interval);
-  }, [direction, ballPosition, rightPlayerX]);
-  
-  const leftKickVariants = {
-    idle: { rotate: 0 },
-    kicking: { rotate: 10, transition: { duration: 0.3 } }
-  };
-  
-  const rightKickVariants = {
-    idle: { rotate: 0 },
-    kicking: { rotate: -10, transition: { duration: 0.3 } }
-  };
-
-  const ballVariants = {
-    moving: { y: [0, -15, 0], transition: { repeat: Infinity, duration: 0.8 } }
-  };
-
-  const socialLinks = [
-    { name: "Twitter", icon: <img src="svgs/twitter.png" alt="Twitter" className="w-5 h-5" />, url: "#" },
-    { name: "Instagram", icon: <img src="svgs/instagram.png" alt="Instagram" className="w-5 h-5" />, url: "#" },
-    { name: "LinkedIn", icon: <img src="svgs/linkedin.png" alt="LinkedIn" className="w-5 h-5" />, url: "#" },
-    { name: "Discord", icon: <img src="svgs/discord.png" alt="Discord" className="w-6 h-6" />, url: "#" },
-  ];
-
-  const footerLinks = [
-    { name: "About", url: "#" },
-    { name: "Contact", url: "#" },
-    { name: "Privacy Policy", url: "#" },
-    { name: "Terms of Service", url: "#" },
-    { name: "Code of Conduct", url: "#" },
-  ];
+      // Check right side: if the ball is within ±kickRange of endX
+      if (Math.abs(latest - endX) < kickRange && !rightKickCooldown) {
+        setIsRightKicking(true);
+        setRightKickCooldown(true);
+        setTimeout(() => {
+          setIsRightKicking(false);
+          setRightKickCooldown(false);
+        }, 500);
+      }
+    });
+    return unsubscribe;
+  }, [ballX, startX, endX, kickRange, leftKickCooldown, rightKickCooldown]);
 
   return (
-    <footer className="relative bg-[#0e041c] py-16 px-4 border-t border-violet-900/30">
-      {/* Football Game Animation */}
-      <div className="absolute inset-0 pointer-events-none z-10">
-        <div className="relative w-full h-64 overflow-hidden">
-          {/* Left player */}
-          <motion.div 
-            className="absolute bottom-1"
-            style={{ left: leftPlayerX }}
-            animate={isLeftKicking ? 'kicking' : 'idle'}
-            variants={leftKickVariants}
-          >
-            <img 
-              src="svgs/playerLeft.png" 
-              alt="Left Player" 
-              className="w-48 h-64 mt-[20px]"
-            />
-          </motion.div>
-          
-          {/* Right player */}
-          <motion.div 
-            className="absolute bottom-4"
-            style={{ right: 100 }} // Positioned 100px from the right edge
-            animate={isRightKicking ? 'kicking' : 'idle'}
-            variants={rightKickVariants}
-          >
-            <img 
-              src="svgs/playerRight.png" 
-              alt="Right Player" 
-              className="w-64 h-64"
-            />
-          </motion.div>
-          
-          {/* Football */}
-          <motion.div 
-            className="absolute bottom-8"
-            style={{ left: ballPosition }}
-            animate="moving"
-            variants={ballVariants}
-          >
-            <img 
-              src="svgs/football.png" 
-              alt="Football" 
-              className="h-12 w-auto"
-            />
-          </motion.div>
-          
-          {/* Kick effect */}
-          {(isLeftKicking || isRightKicking) && (
-            <motion.div 
-              className="absolute bottom-10 bg-white rounded-full opacity-70"
-              style={{ 
-                left: isRightKicking ? rightPlayerX - 40 : leftPlayerX + playerWidth,
-                width: 20,
-                height: 20
-              }}
-              initial={{ scale: 0 }}
-              animate={{ scale: 3, opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            />
-          )}
-        </div>
-      </div>
+    <footer className="relative bg-[#0e041c] py-10 border-t border-violet-900/30">
+      <div className="max-w-7xl mx-auto flex items-center justify-between" ref={containerRef}>
+        
+        {/* Left Player */}
+        <motion.div
+          className="relative bottom-0"
+          animate={{ rotate: isLeftKicking ? 10 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <img src="svgs/playerLeft.png" alt="Left Player" className="w-48 h-60 mt-[40px] mr-[20px]" />
+        </motion.div>
 
-      {/* Footer Content */}
-      <div className="max-w-7xl mx-auto relative z-20">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-10">
+        {/* Footer Content - Centered */}
+        <div className="text-center px-8 max-w-3xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="mb-8 md:mb-0"
           >
-            <img
-              src="https://cdn.brandfetch.io/idD1YVU3LM/w/820/h/820/theme/dark/logo.png?c=1dxbfHSJFAPEGdCLU4o5B"
-              alt="Bolt Logo"
-              className="h-12 mb-4"
+            <img 
+              src="https://cdn.brandfetch.io/idD1YVU3LM/w/820/h/820/theme/dark/logo.png?c=1dxbfHSJFAPEGdCLU4o5B" 
+              alt="Bolt Logo" 
+              className="h-12 mx-auto mb-4" 
             />
-            <p className="text-white/70 max-w-md text-sm">
+            <p className="text-white/70 text-sm max-w-md mx-auto">
               Platform for exciting hackathons, showcase innovative ideas, and collaborate with a global community.
             </p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-6">
-            {socialLinks.map((link, index) => (
+          {/* Social Links */}
+          <div className="flex justify-center gap-6 mt-6">
+            {['twitter', 'instagram', 'linkedin', 'discord'].map((platform, index) => (
               <motion.a
-                key={link.name}
-                href={link.url}
+                key={platform}
+                href="#"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 whileHover={{ y: -5 }}
@@ -421,22 +303,17 @@ function Footer() {
                 viewport={{ once: true }}
                 className="w-10 h-10 flex items-center justify-center bg-violet-900/30 text-white rounded-full hover:bg-violet-800/50 transition-colors"
               >
-                {link.icon}
+                <img src={`svgs/${platform}.png`} alt={platform} className="w-5 h-5" />
               </motion.a>
             ))}
           </div>
-        </div>
 
-        <div className="mt-[50px] pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-white/60 text-sm mb-4 md:mb-0">
-            © {currentYear} Hackathon.dev
-          </p>
-
-          <div className="flex flex-wrap justify-center gap-6">
-            {footerLinks.map((link, index) => (
+          {/* Footer Links */}
+          <div className="flex flex-wrap justify-center gap-6 mt-6">
+            {['About', 'Contact', 'Privacy Policy', 'Terms of Service', 'Code of Conduct'].map((link, index) => (
               <motion.a
-                key={link.name}
-                href={link.url}
+                key={link}
+                href="#"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 whileHover={{ scale: 1.05 }}
@@ -444,12 +321,35 @@ function Footer() {
                 viewport={{ once: true }}
                 className="text-white/70 text-sm hover:text-white transition-colors"
               >
-                {link.name}
+                {link}
               </motion.a>
             ))}
           </div>
+
+          <p className="text-white/60 text-sm mt-6">
+            © {currentYear} Hackathon.dev
+          </p>
         </div>
+
+        {/* Right Player */}
+        <motion.div
+          className="relative bottom-0"
+          animate={{ rotate: isRightKicking ? -10 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <img src="svgs/playerRight.png" alt="Right Player" className="w-60 h-60 mt-[40px] mr-[20px]" />
+        </motion.div>
       </div>
+
+      {/* Football Animation */}
+      <motion.div
+        className="absolute bottom-10 mr-[30px]"
+        style={{ left: ballX }}
+        variants={ballVariants}
+        animate="bounce"
+      >
+        <img src="svgs/football.png" alt="Football" className="h-10 w-auto" />
+      </motion.div>
     </footer>
   );
 }
