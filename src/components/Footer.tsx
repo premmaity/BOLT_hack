@@ -167,7 +167,7 @@ import { motion, useMotionValue, animate } from 'framer-motion';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [fieldWidth, setFieldWidth] = useState(0);
 
   // Measure container width for positioning calculations
@@ -194,7 +194,7 @@ function Footer() {
 
   // Adjust startX so the ball doesn't surpass the left player (adjust as needed)
   // Here we want the ball to trigger left kick when it's around left player's edge.
-  const startX = leftPlayerX + playerWidth + 60; 
+  const startX = leftPlayerX + playerWidth + 60;
   // End position for the ball's horizontal movement
   const endX = fieldWidth ? (fieldWidth - playerWidth + rightShift - ballSize) : startX;
 
